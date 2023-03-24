@@ -1,0 +1,362 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server for Shopping Cart web application.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Shopping Cart"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "prasana4599@gmail.com"
+host: "shoppingcart.swagger.io"
+basePath: "/v2"
+tags:
+- name: "Products"
+  description: "Products to buy"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "shop"
+  description: "Access to the Products"
+- name: "customer"
+  description: "User of the Shopping Cart"
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /Product/Create:
+    post:
+      tags:
+      - "product"
+      summary: "Add a new product to the store"
+      description: ""
+      operationId: "createProduct"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Product object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "405":
+          description: "Invalid input"
+  /Product/AllProducts:
+    get:
+      tags:
+      - "product"
+      summary: "get all the products"
+      description: ""
+      operationId: "allproduct"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+        "405":
+          description: "Validation exception"
+  /Product/{category}:
+    get:
+      tags:
+      - "product"
+      summary: "Find product by Category"
+      description: "Returns the list of products belongs to the Category"
+      operationId: "searchCategory"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "category"
+        in: "path"
+        description: "category of products to return"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Invalid Category supplied"
+        "404":
+          description: "Product not found"
+  /Customer/Register:
+    post:
+      tags:
+      - "customer"
+      summary: "Register a new customer in the database"
+      description: ""
+      operationId: "createCustomer"
+      consumes:
+       - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Customer object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Customer"
+      responses:
+        "405":
+          description: "Invalid input"
+  /Customer/Update:
+    put:
+      tags:
+      - "customer"
+      summary: "updates the customer details"
+      description: ""
+      operationId: "updateCustomer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Customer object that needs to be updated to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Customer"
+      responses:
+        "200":
+          description: "successful operation"
+  /Customer/AllCustomer:
+    get:
+      tags:
+      - "customer"
+      summary: "Returns all the Customer Registered"
+      description: "Returns list of Customers with their details stored in the database"
+      operationId: "allCustomer"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+  /OrderItem/AllCart:
+    get:
+      tags:
+      - "orderitem"
+      summary: "lists all the products in the cart"
+      description: "It has all the items ordered by the Customer"
+      operationId: "allOrderItem"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          
+        "400":
+          description: "Invalid Order"
+  /OrderItem/Add2Cart/{id}:
+    get:
+      tags:
+      - "orderitem"
+      summary: "It selects the Product and adds it in the OrderItem"
+      description: "This selects the Product that is to be ordered by the customer using the product ID and inserts it into the OrderItem table"
+      operationId: "add2Cart"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of pet that needs to be fetched"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+  /OrderItem/DeleteFromCart/{id}:
+    delete:
+      tags:
+      - "orderitem"
+      summary: "Delete orderitem by ID"
+      description: "Deletes the the Product in OrderItem using the Id"
+      operationId: "deleteFromCart"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the order that needs to be deleted"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+  /Orders/Add:
+    post:
+      tags:
+      - "orders"
+      summary: "Create a new order"
+      description: "Creates a new order consisting of all the products selected for buying by the customer"
+      operationId: "addOrder"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Orders object that needs to be updated to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Orders"
+      responses:
+        default:
+          description: "successful operation"
+  /Orders/Delete/{id}:
+    delete:
+      tags:
+      - "orders"
+      summary: "Creates list of users with given input array"
+      description: ""
+      operationId: "deleteOrder"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the order that needs to be deleted"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        default:
+          description: "successful operation"
+  /Orders/Update:
+    put:
+      tags:
+      - "orders"
+      summary: "Update the order placed by the Customer"
+      description: ""
+      operationId: "updateOrder"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Orders"
+      responses:
+        default:
+          description: "successful operation"
+  /Orders/Pay:
+    put:
+      tags:
+      - "orders"
+      summary: "generates an Order Tracking Id"
+      description: ""
+      operationId: "pay"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "generate a Order Tracking Id and store it in the database"
+        required: true
+        schema:
+          $ref: "#/definitions/Orders"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+definitions:
+  Orders:
+    type: "object"
+    properties:
+      orderID:
+        type: "integer"
+        format: "int64"
+      totalPrice:
+        type: "integer"
+        format: "int64"
+      address:
+        type: "string"
+      orderTrackingNumber:
+        type: "string"
+      customer:
+        $ref: "#/definitions/Customer"
+      orderitem:
+         $ref: "#/definitions/OrderItem"
+    xml:
+      name: "Orders"
+  OrderItem:
+    type: "object"
+    properties:
+      orderID:
+        type: "integer"
+        format: "int64"
+      productName:
+        type: "string"
+      imageUrl:
+        type: "string"
+      unitPrice:
+        type: "integer"
+        format: "int64"
+      Orders:
+        $ref: "#/definitions/Orders"
+    xml:
+      name: "OrderItem"
+  Customer:
+    type: "object"
+    properties:
+      customerId:
+        type: "integer"
+        format: "int64"
+      customerFirstname:
+        type: "string"
+      customerLastname:
+        type: "string"
+      gender:
+        type: "string"
+      email:
+        type: "string"
+      dateOfBirth:
+        type: "string"
+      password:
+        type: "string"
+      Orders:
+        $ref: "#/definitions/Orders"
+    xml:
+      name: "Customer"
+  Product:
+    type: "object"
+    properties:
+      productId:
+        type: "integer"
+        format: "int64"
+      productName:
+        type: "string"
+      productPrice:
+        type: "integer"
+        format: "int64"
+      imageUrl:
+        type: "string"
+      category:
+        type: "string"
+    xml:
+      name: "Product"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
